@@ -1,8 +1,12 @@
 import { useState, useEffect } from 'react';
+import styles from './Maps.module.css';
 
-const calculateDistance = (point1, point2) => {
+type Point =  { id: number, name: string, lat: number, lng: number }
+
+
+const calculateDistance = (point1: Point, point2: Point) => {
     // Haversine formula for calculating distance between two points on Earth
-    const toRad = (value) => (value * Math.PI) / 180;
+    const toRad = (value: number) => (value * Math.PI) / 180;
     const R = 6371; // Radius of the Earth in km
 
     const dLat = toRad(point2.lat - point1.lat);
@@ -19,7 +23,7 @@ const calculateDistance = (point1, point2) => {
     return distance;
 };
 
-const calculatePathDistance = (points) => {
+const calculatePathDistance = (points: Point[]) => {
     if (points.length < 2) return 0;
 
     let totalDistance = 0;
@@ -30,22 +34,27 @@ const calculatePathDistance = (points) => {
     return totalDistance;
 };
 
+//some test points
+const testPoints: Point[] = [
+    { id: 1, name: "Safe stay", lat: 34.0522, lng: -118.2437 },
+    { id: 2, name: "jilad", lat: 37.7749, lng: -122.4194 },
+    { id: 3, name: "Blasmart", lat: 40.7128, lng: -74.0060 },
+    { id: 4, name: "Havens", lat: 32.7767, lng: -96.7970 },
+    { id: 5, name: "Ezzy Palace", lat: 29.7604, lng: -95.3698 }
+]
 export default function Map() {
     // Sample data points (coordinates)
-    const [points, setPoints] = useState([
-        { id: 1, name: "Location A", lat: 34.0522, lng: -118.2437 },
-        { id: 2, name: "Location B", lat: 37.7749, lng: -122.4194 },
-        { id: 3, name: "Location C", lat: 40.7128, lng: -74.0060 },
-        { id: 4, name: "Location D", lat: 32.7767, lng: -96.7970 },
-        { id: 5, name: "Location E", lat: 29.7604, lng: -95.3698 }
-    ]);
-
-    const [selectedPoints, setSelectedPoints] = useState([]);
+    const [points, setPoints] = useState<Point[]>([]);
+    const [selectedPoints, setSelectedPoints] = useState<Point[]>([]);
     const [pathDistance, setPathDistance] = useState(0);
     const [zoomLevel, setZoomLevel] = useState(1);
 
+    useEffect(() => {
+        setPoints(testPoints);
+    }, []);
+
     // Map dimensions
-    const mapWidth = 800;
+    const mapWidth = 500;
     const mapHeight = 500;
 
     // Calculate bounds for the map
@@ -58,7 +67,7 @@ export default function Map() {
     const lngRange = maxLng - minLng;
 
     // Function to convert geographic coordinates to pixel coordinates
-    const coordToPixels = (lat, lng) => {
+    const coordToPixels = (lat: number, lng: number) => {
         // Apply zoom factor
         const zoomFactor = zoomLevel;
 
@@ -75,10 +84,10 @@ export default function Map() {
         setPathDistance(distance);
     }, [selectedPoints]);
 
-    const handlePointSelection = (point) => {
-        if (selectedPoints.find(p => p.id === point.id)) {
+    const handlePointSelection = (point: Point) => {
+        if (selectedPoints.find((p: Point) => p.id === point.id)) {
             // If already selected, remove it
-            setSelectedPoints(selectedPoints.filter(p => p.id !== point.id));
+            setSelectedPoints(selectedPoints.filter((p: Point) => p.id !== point.id));
         } else {
             // Add to selected points
             setSelectedPoints([...selectedPoints, point]);
@@ -89,13 +98,13 @@ export default function Map() {
         setSelectedPoints([]);
     };
 
-    const isPointSelected = (pointId) => {
-        return selectedPoints.some(p => p.id === pointId);
+    const isPointSelected = (pointId: number) => {
+        return selectedPoints.some((p:Point) => p.id === pointId);
     };
 
     // Get index if point is in the path
-    const getPointIndex = (pointId) => {
-        const index = selectedPoints.findIndex(p => p.id === pointId);
+    const getPointIndex = (pointId: number) => {
+        const index = selectedPoints.findIndex((p: Point) => p.id === pointId);
         return index >= 0 ? index + 1 : null;
     };
 
@@ -108,28 +117,28 @@ export default function Map() {
     };
 
     return (
-        <div className="flex flex-col h-full">
-            <div className="flex justify-between items-center p-4 bg-gray-100">
-                <h1 className="text-xl font-bold">Interactive Map</h1>
+        <div className={styles.container}>
+            <div className={styles.header}>
+                <h1 className={styles.title}>Interactive Map</h1>
                 <div>
-          <span className="mr-4">
-            Total Distance: <strong>{pathDistance.toFixed(2)} km</strong>
-          </span>
+                    <span className={styles.distanceInfo}>
+                        Total Distance: <strong>{pathDistance.toFixed(2)} km</strong>
+                    </span>
                     <button
                         onClick={resetSelection}
-                        className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                        className={styles.resetButton}
                     >
                         Reset Path
                     </button>
                 </div>
             </div>
 
-            <div className="flex flex-1">
+            <div className={styles.mapContainer}>
                 {/* Map Area */}
-                <div className="w-3/4 bg-blue-50 relative p-4">
-                    <div className="bg-blue-100 h-full rounded-lg border-2 border-blue-200 relative overflow-hidden">
+                <div className={styles.mapArea}>
+                    <div className={styles.mapCanvas}>
                         {/* Map background with grid */}
-                        <div className="absolute inset-0 bg-blue-50">
+                        <div className={styles.mapBackground}>
                             {/* Simplified map background with grid lines */}
                             <svg width="100%" height="100%" className="opacity-30">
                                 <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
@@ -139,18 +148,18 @@ export default function Map() {
                             </svg>
 
                             {/* Longitude/Latitude labels */}
-                            <div className="absolute bottom-2 left-2 text-xs text-gray-500">
+                            <div className={styles.lngLabel}>
                                 Longitude: {minLng.toFixed(1)} to {maxLng.toFixed(1)}
                             </div>
-                            <div className="absolute top-2 left-2 text-xs text-gray-500">
+                            <div className={styles.latLabel}>
                                 Latitude: {minLat.toFixed(1)} to {maxLat.toFixed(1)}
                             </div>
                         </div>
 
                         {/* Interactive Map */}
-                        <div className="absolute inset-0 overflow-auto">
+                        <div className={styles.interactiveMapContainer}>
                             <div
-                                className="relative"
+                                className={styles.interactiveMap}
                                 style={{
                                     width: `${mapWidth * zoomLevel}px`,
                                     height: `${mapHeight * zoomLevel}px`
@@ -201,9 +210,7 @@ export default function Map() {
                                     return (
                                         <div
                                             key={point.id}
-                                            className={`absolute w-8 h-8 -ml-4 -mt-4 rounded-full flex items-center justify-center cursor-pointer transition-all transform hover:scale-110 ${
-                                                isSelected ? 'bg-green-500 text-white shadow-lg' : 'bg-red-500 text-white hover:bg-red-600'
-                                            }`}
+                                            className={`${styles.mapPoint} ${isSelected ? styles.mapPointSelected : styles.mapPointDefault}`}
                                             style={{
                                                 left: position.x,
                                                 top: position.y
@@ -214,7 +221,7 @@ export default function Map() {
                                             {pointIndex || ''}
 
                                             {/* Point label */}
-                                            <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 bg-white px-2 py-1 rounded text-xs text-gray-800 whitespace-nowrap font-bold">
+                                            <div className={styles.pointLabel}>
                                                 {point.name}
                                             </div>
                                         </div>
@@ -224,15 +231,15 @@ export default function Map() {
                         </div>
 
                         {/* Map Controls */}
-                        <div className="absolute bottom-4 right-4 flex flex-col">
+                        <div className={styles.mapControls}>
                             <button
-                                className="mb-2 w-8 h-8 bg-white rounded-full shadow flex items-center justify-center"
+                                className={`${styles.zoomButton} ${styles.zoomInButton}`}
                                 onClick={handleZoomIn}
                             >
                                 +
                             </button>
                             <button
-                                className="w-8 h-8 bg-white rounded-full shadow flex items-center justify-center"
+                                className={styles.zoomButton}
                                 onClick={handleZoomOut}
                             >
                                 -
@@ -242,9 +249,9 @@ export default function Map() {
                 </div>
 
                 {/* Sidebar with location list */}
-                <div className="w-1/4 p-4 bg-gray-50 overflow-y-auto">
-                    <h2 className="text-lg font-bold mb-4">Locations</h2>
-                    <ul className="space-y-2">
+                <div className={styles.sidebar}>
+                    <h2 className={styles.sidebarTitle}>Locations</h2>
+                    <ul className={styles.locationsList}>
                         {points.map((point) => {
                             const isSelected = isPointSelected(point.id);
                             const pointIndex = getPointIndex(point.id);
@@ -252,20 +259,18 @@ export default function Map() {
                             return (
                                 <li
                                     key={point.id}
-                                    className={`p-3 rounded cursor-pointer ${
-                                        isSelected ? 'bg-green-100 border-l-4 border-green-500' : 'bg-white hover:bg-gray-100'
-                                    }`}
+                                    className={`${styles.locationItem} ${isSelected ? styles.locationItemSelected : styles.locationItemDefault}`}
                                     onClick={() => handlePointSelection(point)}
                                 >
-                                    <div className="flex justify-between items-center">
+                                    <div className={styles.locationItemContent}>
                                         <div>
-                                            <span className="font-medium">{point.name}</span>
-                                            <div className="text-xs text-gray-500">
+                                            <span className={styles.locationName}>{point.name}</span>
+                                            <div className={styles.locationCoords}>
                                                 {point.lat.toFixed(4)}, {point.lng.toFixed(4)}
                                             </div>
                                         </div>
                                         {pointIndex && (
-                                            <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white text-xs">
+                                            <div className={styles.locationIndex}>
                                                 {pointIndex}
                                             </div>
                                         )}
@@ -276,14 +281,14 @@ export default function Map() {
                     </ul>
 
                     {selectedPoints.length > 1 && (
-                        <div className="mt-6">
-                            <h3 className="text-md font-bold mb-2">Path Details</h3>
-                            <table className="w-full text-sm">
+                        <div className={styles.pathDetails}>
+                            <h3 className={styles.pathDetailsTitle}>Path Details</h3>
+                            <table className={styles.pathTable}>
                                 <thead>
-                                <tr className="bg-gray-100">
-                                    <th className="p-2 text-left">From</th>
-                                    <th className="p-2 text-left">To</th>
-                                    <th className="p-2 text-right">Distance</th>
+                                <tr className={styles.pathTableHeader}>
+                                    <th className={styles.pathTableHeaderCell}>From</th>
+                                    <th className={styles.pathTableHeaderCell}>To</th>
+                                    <th className={styles.pathTableHeaderCellRight}>Distance</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -293,10 +298,10 @@ export default function Map() {
                                         const segmentDistance = calculateDistance(point, nextPoint);
 
                                         return (
-                                            <tr key={`path-${index}`} className="border-b border-gray-200">
-                                                <td className="p-2">{point.name}</td>
-                                                <td className="p-2">{nextPoint.name}</td>
-                                                <td className="p-2 text-right">{segmentDistance.toFixed(2)} km</td>
+                                            <tr key={`path-${index}`} className={styles.pathTableRow}>
+                                                <td className={styles.pathTableCell}>{point.name}</td>
+                                                <td className={styles.pathTableCell}>{nextPoint.name}</td>
+                                                <td className={styles.pathTableCellRight}>{segmentDistance.toFixed(2)} km</td>
                                             </tr>
                                         );
                                     }

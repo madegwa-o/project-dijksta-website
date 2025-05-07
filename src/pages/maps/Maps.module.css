@@ -1,0 +1,265 @@
+/* Map.module.css */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: #f3f4f6;
+}
+
+.title {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.distanceInfo {
+    margin-right: 1rem;
+}
+
+.resetButton {
+    padding: 0.25rem 0.75rem;
+    background-color: #ef4444;
+    color: white;
+    border-radius: 0.25rem;
+}
+
+.resetButton:hover {
+    background-color: #dc2626;
+}
+
+.mapContainer {
+    display: flex;
+    flex: 1;
+}
+
+.mapArea {
+    width: 75%;
+    background-color: #eff6ff;
+    position: relative;
+    padding: 1rem;
+}
+
+.mapCanvas {
+    background-color: #dbeafe;
+    height: 100%;
+    border-radius: 0.5rem;
+    border: 2px solid #bfdbfe;
+    position: relative;
+    overflow: hidden;
+}
+
+.mapBackground {
+    position: absolute;
+    inset: 0;
+    background-color: #eff6ff;
+}
+
+.lngLabel {
+    position: absolute;
+    bottom: 0.5rem;
+    left: 0.5rem;
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+.latLabel {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+.interactiveMapContainer {
+    position: absolute;
+    inset: 0;
+    overflow: auto;
+}
+
+.interactiveMap {
+    position: relative;
+}
+
+.mapPoint {
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+    margin-left: -1rem;
+    margin-top: -1rem;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.mapPoint:hover {
+    transform: scale(1.1);
+}
+
+.mapPointDefault {
+    background-color: #ef4444;
+    color: white;
+}
+
+.mapPointDefault:hover {
+    background-color: #dc2626;
+}
+
+.mapPointSelected {
+    background-color: #10b981;
+    color: white;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.pointLabel {
+    position: absolute;
+    bottom: -1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    color: #1f2937;
+    white-space: nowrap;
+    font-weight: bold;
+}
+
+.mapControls {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.zoomButton {
+    width: 2rem;
+    height: 2rem;
+    background-color: white;
+    border-radius: 9999px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.zoomInButton {
+    margin-bottom: 0.5rem;
+}
+
+.sidebar {
+    width: 25%;
+    padding: 1rem;
+    background-color: #f9fafb;
+    overflow-y: auto;
+}
+
+.sidebarTitle {
+    font-size: 1.125rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.locationsList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.locationItem {
+    padding: 0.75rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+
+.locationItemDefault {
+    background-color: white;
+}
+
+.locationItemDefault:hover {
+    background-color: #f3f4f6;
+}
+
+.locationItemSelected {
+    background-color: #d1fae5;
+    border-left: 4px solid #10b981;
+}
+
+.locationItemContent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.locationName {
+    font-weight: 500;
+}
+
+.locationCoords {
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+.locationIndex {
+    width: 1.5rem;
+    height: 1.5rem;
+    background-color: #10b981;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.75rem;
+}
+
+.pathDetails {
+    margin-top: 1.5rem;
+}
+
+.pathDetailsTitle {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.pathTable {
+    width: 100%;
+    font-size: 0.875rem;
+}
+
+.pathTableHeader {
+    background-color: #f3f4f6;
+}
+
+.pathTableHeaderCell {
+    padding: 0.5rem;
+    text-align: left;
+}
+
+.pathTableHeaderCellRight {
+    padding: 0.5rem;
+    text-align: right;
+}
+
+.pathTableRow {
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.pathTableCell {
+    padding: 0.5rem;
+}
+
+.pathTableCellRight {
+    padding: 0.5rem;
+    text-align: right;
+}

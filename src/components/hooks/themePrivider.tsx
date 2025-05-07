@@ -1,11 +1,13 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 
-// Theme context with proper TypeScript typing
-const ThemeContext = createContext({
-    theme: "light",
-    toggleTheme: () => {},
-    setTheme: (theme) => {},
-});
+interface ThemeContextType {
+    theme: string;
+    toggleTheme: () => void;
+    setTheme: React.Dispatch<React.SetStateAction<string>>; // Add setTheme
+}
+
+
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function useTheme() {
     const context = useContext(ThemeContext);
@@ -15,8 +17,12 @@ export function useTheme() {
     return context;
 }
 
-export default function ThemeContextProvider({ children }) {
-    const [theme, setTheme] = useState(() => {
+interface ThemeContextProviderProps {
+    children: ReactNode;
+}
+
+export default function ThemeContextProvider({ children } : ThemeContextProviderProps) {
+    const [theme, setTheme] = useState<string>(() => {
         // First try to get the theme from localStorage
         const savedTheme = localStorage.getItem("theme");
         if (savedTheme) {
@@ -42,7 +48,7 @@ export default function ThemeContextProvider({ children }) {
     useEffect(() => {
         const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
-        const handleChange = (e) => {
+        const handleChange = (e : MediaQueryListEvent) => {
             // Only change if user hasn't manually set a preference
             if (!localStorage.getItem("theme")) {
                 setTheme(e.matches ? "dark" : "light");

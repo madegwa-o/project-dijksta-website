@@ -6,7 +6,7 @@ export default function Sidebar() {
     return (
         <aside className={styles.sidebar}>
             <div className={styles.section}>
-                <h3>Available Homes</h3>
+                <h3>For You</h3>
                 <ul>
                     <li>
                         <Link to="/homes/popular" className={styles.navLink}>Popular</Link>
@@ -18,6 +18,11 @@ export default function Sidebar() {
                         <Link to="/homes/new" className={styles.navLink}>New</Link>
                     </li>
                 </ul>
+            </div>
+            <div className={styles.section}>
+                <h3>Communities</h3>
+
+
             </div>
             <div className={styles.section}>
                 <h3>Maps</h3>

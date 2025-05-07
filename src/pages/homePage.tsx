@@ -1,56 +1,68 @@
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import styles from './HomePage.module.css';
 import clubImage from '../assets/club.png'
 import clubImage1 from '../assets/club1.png'
+import {useParams} from 'react-router-dom';
+
+type Post = {
+    id: number,
+    community: string,
+    author: string,
+    title: string,
+    content: string,
+    upvotes: number,
+    comments: number,
+    timePosted: string,
+    image: string | null,
+}
+
+const mockPosts: Post[] = [
+    {
+        id: 1,
+        community: 'Sports Club',
+        author: 'john_doe',
+        title: 'Upcoming football match this Friday',
+        content: 'Join us for an epic showdown between the top teams!',
+        upvotes: 124,
+        comments: 16,
+        timePosted: '3 hours ago',
+        image: null
+    },
+    {
+        id: 2,
+        community: 'Investment Group',
+        author: 'financeguru',
+        title: 'Weekly meeting agenda',
+        content: 'We’ll discuss potential investment opportunities...',
+        upvotes: 78,
+        comments: 12,
+        timePosted: '5 hours ago',
+        image: clubImage
+    },
+    {
+        id: 3,
+        community: 'Study Group - CS 101',
+        author: 'student123',
+        title: 'JavaScript fundamentals review session',
+        content: 'Let’s meet on Thursday to review JS basics...',
+        upvotes: 89,
+        comments: 22,
+        timePosted: '1 day ago',
+        image: clubImage1
+    },
+]
 
 export default function HomePage() {
-    // Mock data for posts
-    const [posts, setPosts] = useState([
-        {
-            id: 1,
-            subreddit: 'r/programming',
-            author: 'coder123',
-            title: 'The future of React development in 2025',
-            content: 'React continues to evolve with new features...',
-            upvotes: 524,
-            comments: 83,
-            timePosted: '5 hours ago',
-            image: null
-        },
-        {
-            id: 2,
-            subreddit: 'r/webdev',
-            author: 'devguru',
-            title: 'CSS Variables changed my workflow completely',
-            content: 'After years of struggling with maintaining consistent themes...',
-            upvotes: 231,
-            comments: 42,
-            timePosted: '8 hours ago',
-            image: clubImage1
-        },
-        {
-            id: 3,
-            subreddit: 'r/reactjs',
-            author: 'reactfan',
-            title: 'Custom hooks that every project should have',
-            content: 'I\'ve compiled a list of essential custom hooks...',
-            upvotes: 876,
-            comments: 125,
-            timePosted: '2 days ago',
-            image: null
-        },
-        {
-            id: 4,
-            subreddit: 'r/javascript',
-            author: 'jsdev',
-            title: 'Understanding the async/await pattern',
-            content: 'A deep dive into how async/await works under the hood...',
-            upvotes: 340,
-            comments: 67,
-            timePosted: '1 day ago',
-            image: clubImage
-        }
-    ]);
+    const {communityName} = useParams();
+    const [posts, setPosts] = useState<Post[] >([]);
+
+    const filteredPosts = communityName ? posts.filter((post : Post) => post.community == communityName) : posts;
+
+
+    useEffect(() => {
+        setPosts(mockPosts)
+    }, []);
+
 
     return (
         <div className={styles.homePage}>
@@ -92,7 +104,7 @@ export default function HomePage() {
 
                 {/* Main feed posts */}
                 <div className={styles.posts}>
-                    {posts.map(post => (
+                    {filteredPosts.map((post : Post) => (
                         <div key={post.id} className={styles.post}>
                             {/* Vote controls */}
                             <div className={styles.voteControls}>
@@ -112,7 +124,7 @@ export default function HomePage() {
                             {/* Post content */}
                             <div className={styles.postContent}>
                                 <div className={styles.postHeader}>
-                                    <span className={styles.subreddit}>{post.subreddit}</span>
+                                    <span className={styles.subreddit}>{post.community}</span>
                                     <span className={styles.postedBy}>Posted by u/{post.author} {post.timePosted}</span>
                                 </div>
                                 <h3 className={styles.postTitle}>{post.title}</h3>
@@ -166,9 +178,9 @@ export default function HomePage() {
                 {/* Premium card */}
                 <div className={styles.card}>
                     <div className={styles.premiumCard}>
-                        <h3>Reddit Premium</h3>
-                        <p>The best Reddit experience, with monthly Coins</p>
-                        <button className={styles.premiumButton}>Try Now</button>
+                        <h3>Support this project</h3>
+                        <p>Donate, and help us maintain this site</p>
+                        <button className={styles.premiumButton}>Donate Now</button>
                     </div>
                 </div>
 
@@ -177,12 +189,9 @@ export default function HomePage() {
                     <div className={styles.communitiesCard}>
                         <h3>Popular Communities</h3>
                         <ul className={styles.communityList}>
-                            <li>r/programming</li>
-                            <li>r/webdev</li>
-                            <li>r/reactjs</li>
-                            <li>r/javascript</li>
-
-                            <li>r/css</li>
+                            <li>Exam preparation tips</li>
+                            <li>Football club updates</li>
+                            <li>Job opportunities for students</li>
                         </ul>
                         <button className={styles.seeMoreButton}>See More</button>
                     </div>
